@@ -25,7 +25,7 @@
 <div class="my-5 text-center">
     <h2 class="mb-2">記事一覧</h2>
     <div class="row" id="posts">
-        {% for blog in blog_list %}
+        {% for blog in blog_data %}
         <div class="col-4 mb-3">
             <div class="card">
                 <div class="card-body">
@@ -57,7 +57,7 @@
     const addBlog = document.getElementById('add_blog');
     addBlog.addEventListener('submit', e => {
         e.preventDefault();
-        const url = '{% url "addblog" %}';
+        const url = '{% url "add" %}';
         const post_title = document.getElementById('post_title');
         fetch(url, {
             method: 'POST',
@@ -81,12 +81,13 @@
             console.log(error);
         });
     });
+
     // 記事検索
     const searchBlog = document.getElementById('search_blog');
     searchBlog.addEventListener('submit', e => {
         e.preventDefault();
         const search_title = document.getElementById('search_title');
-        const url = `{% url "searchblog" %}?title=${search_title.value}`;
+        const url = `{% url "search" %}?title=${search_title.value}`;
         fetch(url)
             .then(response => {
                 return response.json();

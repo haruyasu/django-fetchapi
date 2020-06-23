@@ -1,35 +1,41 @@
-from django.views.generic import ListView
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import View
+from django.shortcuts import render
 from .models import Blog
 from django.http import JsonResponse
 
 
-class IndexView(ListView):
-    model = Blog
-    template_name = "app/index.html"
+class IndexView(View):
+    def get(self, request, *args, **kwargs):
+        blog_data = Blog.objects.all()
+        return render(request, 'app/index.html', {
+            'blog_data': blog_data,
+        })
 
 
-def addblog(request):
-    title = request.POST.get('title')
+class AddView(View):
+    def post(self, request, *args, **kwargs):
+        title = request.POST.get('title')
 
-    blog = Blog()
-    blog.title = title
-    blog.save()
+        blog = Blog()
+        blog.title = title
+        blog.save()
 
-    d = {
-        'title': title,
-    }
-    return JsonResponse(d)
+        data = {
+            'title': title,
+        }
+        return JsonResponse(data)
 
-def searchblog(request):
-    title = request.GET.get('title')
 
-    if title:
-        title_list = [blog.title for blog in Blog.objects.filter(title__icontains=title)]
-    else:
-        title_list = [blog.title for blog in Blog.objects.all()]
+class SearchView(View):
+    def get(self, request, *args, **kwargs):
+        title = request.GET.get('title')
 
-    d = {
-        'title_list': title_list,
-    }
-    return JsonResponse(d)
+        if title:
+            title_list = [blog.title for blog in Blog.objects.filter(title__icontains=title)]
+        else:
+            title_list = [blog.title for blog in Blog.objects.all()]
+
+        data = {
+            'title_list': title_list,
+        }
+        return JsonResponse(data)

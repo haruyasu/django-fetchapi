@@ -1,1 +1,1 @@
-# django-fetchapi
+# Django FetchApi
