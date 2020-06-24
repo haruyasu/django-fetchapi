@@ -27,14 +27,17 @@ class AddView(View):
 
 
 class SearchView(View):
-    def get(self, request, *args, **kwargs):
-        title = request.GET.get('title')
+    def post(self, request, *args, **kwargs):
+        title = request.POST.get('title')
+        blog_data = Blog.objects.all()
+        title_list = []
 
         if title:
-            title_list = [blog.title for blog in Blog.objects.filter(title__icontains=title)]
-        else:
-            title_list = [blog.title for blog in Blog.objects.all()]
+            blog_data = blog_data.filter(title__icontains=title)
 
+        for blog in blog_data:
+            title_list.append(blog.title)
+        
         data = {
             'title_list': title_list,
         }
